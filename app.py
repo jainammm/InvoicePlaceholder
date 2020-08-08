@@ -9,7 +9,7 @@ import enchant
 
 
 from io import BytesIO
-from utils import getMaxConfidence, getAddress
+from utils import getMaxConfidence, getAddress, getTotalAmount
 
 app = FastAPI()
 
@@ -48,7 +48,8 @@ async def root(request: Request):
     _, final_seller_name = getMaxConfidence(model_output, 'SELLER_NAME')
     print("SELLER_NAME:", final_seller_name)
 
-    _, final_seller_gstin_number = getMaxConfidence(model_output, 'SELLER_GSTIN_NUMBER')
+    _, final_seller_gstin_number = getMaxConfidence(
+        model_output, 'SELLER_GSTIN_NUMBER')
     final_seller_gstin_number = final_seller_gstin_number.replace('GSTIN', '')
     final_seller_gstin_number = final_seller_gstin_number.replace('gstin', '')
     final_seller_gstin_number = re.sub(r'[^\w]', '', final_seller_gstin_number)
@@ -56,7 +57,8 @@ async def root(request: Request):
         final_seller_gstin_number = ''
     print("SELLER_GSTIN_NUMBER:", final_seller_gstin_number)
 
-    _, final_country_of_origin = getMaxConfidence(model_output, 'COUNTRY_OF_ORIGIN')
+    _, final_country_of_origin = getMaxConfidence(
+        model_output, 'COUNTRY_OF_ORIGIN')
     print("COUNTRY_OF_ORIGIN:", final_country_of_origin)
 
     _, final_currency = getMaxConfidence(model_output, 'CURRENCY')
@@ -74,7 +76,8 @@ async def root(request: Request):
     _, final_po_number = getMaxConfidence(model_output, 'PO_NUMBER')
     print("PO_NUMBER:", final_po_number)
 
-    _, final_buyer_gstin_number = getMaxConfidence(model_output, 'BUYER_GSTIN_NUMBER')
+    _, final_buyer_gstin_number = getMaxConfidence(
+        model_output, 'BUYER_GSTIN_NUMBER')
     final_buyer_gstin_number = final_buyer_gstin_number.replace('GSTIN', '')
     final_buyer_gstin_number = final_buyer_gstin_number.replace('gstin', '')
     final_buyer_gstin_number = re.sub(r'[^\w]', '', final_buyer_gstin_number)
@@ -89,6 +92,12 @@ async def root(request: Request):
 
     final_ship_to_address = getAddress(model_output, 'SHIP_TO_ADDRESS')
     print('SHIP_TO_ADDRESS:', final_ship_to_address)
+
+    print("***************")
+    
+    final_total_invoice_amount = getTotalAmount(
+        model_output, 'TOTAL_INVOICE_AMOUNT_ENTERED_BY_WH_OPERATOR')
+    print('TOTAL_INVOICE_AMOUNT_ENTERED_BY_WH_OPERATOR:', final_total_invoice_amount)
 
     workbook.close()
 

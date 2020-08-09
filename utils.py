@@ -15,8 +15,6 @@ def getMaxConfidence(model_output, class_name):
             final_id = item['id']
             confidence = item['confidence']
 
-    print(final_id, final_output, confidence)
-
     return final_id, final_output
 
 
@@ -116,16 +114,11 @@ def getTable(model_output, class_names):
 
         bboxes_row.append([bbox_row_ymin, bbox_row_ymax])
 
-    print("boxes row")
-    print(bboxes_row)
-
     final_rows = []
 
     for bbox in bboxes_row:
         row_dict = {}
         for class_name in class_names:
-            print('*************')
-            print(class_name)
             if class_name == 'TITLE':
                 output = ''
                 for item in model_output:
@@ -133,10 +126,6 @@ def getTable(model_output, class_names):
                         ymin, ymax = item['bounding_box'][1], item['bounding_box'][3]
                         if ymin < bbox[1] and ymax > bbox[0]:
                             output += item['text'] + ' '
-                            print(bbox)
-                            print(ymin, ymax)
-                            print(item['id'], item['text'], item['confidence'])
-                            print('jainam')
 
                 row_dict[class_name] = output
             else:
@@ -147,8 +136,7 @@ def getTable(model_output, class_names):
                         if ymin < bbox[1] and ymax > bbox[0]:
                             output.append(item)
 
-                item_id, item_value = getMaxConfidence(output, class_name)
-                print(item_id, item_value)
+                _, item_value = getMaxConfidence(output, class_name)
                 row_dict[class_name] = item_value
 
         final_rows.append(row_dict)

@@ -142,9 +142,12 @@ async def root(request: Request):
     
 
     # workbook.close()
-    wb.save(os.path.join('results', 'response.xlsx'))
+    file_name = request_body['filename']
+    file_name = os.path.join('results', file_name + '.xlsx')
 
-    with open(os.path.join('results', 'response.xlsx'), 'rb') as f:
+    wb.save(file_name)
+
+    with open(file_name, 'rb') as f:
         xlsx_file = f.read()
 
     return Response(content=xlsx_file,

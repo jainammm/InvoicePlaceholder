@@ -121,6 +121,15 @@ async def root(request: Request):
         column = 'B'
         for class_name in table_class_names:
             if class_name in row:
+                if class_name == 'TOTAL_AMOUNT':
+                    row[class_name] = re.sub('[^.a-zA-Z0-9 \n\.]', '', row[class_name])
+                    print("final total amount lol", row[class_name])
+                    if row[class_name].isnumeric():
+                        row[class_name] = int(row[class_name])
+
+                    ws[column+str(row_number)] = row[class_name]
+                    continue
+
                 ws[column+str(row_number)] = row[class_name]
             column = chr(ord(column) + 1)
 

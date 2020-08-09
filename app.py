@@ -34,8 +34,9 @@ async def root(request: Request):
 
     _, final_seller_id = getMaxConfidence(model_output, 'SELLER_ID')
     final_seller_id = re.sub(r'[^\w]', '', final_seller_id)
-    if(en_dictionary.check(final_seller_id)):
-        final_seller_id = ''
+    if final_seller_id != '':
+        if(en_dictionary.check(final_seller_id)):
+            final_seller_id = ''
     print("SELLER_ID:", final_seller_id)
     ws['E4'] = final_seller_id
 
@@ -48,8 +49,9 @@ async def root(request: Request):
     final_seller_gstin_number = final_seller_gstin_number.replace('GSTIN', '')
     final_seller_gstin_number = final_seller_gstin_number.replace('gstin', '')
     final_seller_gstin_number = re.sub(r'[^\w]', '', final_seller_gstin_number)
-    if(en_dictionary.check(final_seller_gstin_number)):
-        final_seller_gstin_number = ''
+    if final_seller_gstin_number != '':
+        if(en_dictionary.check(final_seller_gstin_number)):
+            final_seller_gstin_number = ''
     print("SELLER_GSTIN_NUMBER:", final_seller_gstin_number)
     ws['E11'] = final_seller_gstin_number
 
@@ -83,8 +85,9 @@ async def root(request: Request):
     final_buyer_gstin_number = final_buyer_gstin_number.replace('GSTIN', '')
     final_buyer_gstin_number = final_buyer_gstin_number.replace('gstin', '')
     final_buyer_gstin_number = re.sub(r'[^\w]', '', final_buyer_gstin_number)
-    if(en_dictionary.check(final_buyer_gstin_number)):
-        final_buyer_gstin_number = ''
+    if final_buyer_gstin_number != ''
+        if(en_dictionary.check(final_buyer_gstin_number)):
+            final_buyer_gstin_number = ''
     print("BUYER_GSTIN_NUMBER:", final_buyer_gstin_number)
     ws['M13'] = final_buyer_gstin_number
 

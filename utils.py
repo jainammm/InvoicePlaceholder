@@ -34,6 +34,9 @@ def getAddress(model_output, class_name):
             bounding_box = item['bounding_box']
             confidence = item['confidence']
 
+    if bounding_box == []:
+        return ''
+
     word_height = bounding_box[3] - bounding_box[1]
 
     valid_box_ymin = bounding_box[1] - int(2.5*word_height)
@@ -64,6 +67,9 @@ def getTotalAmount(model_output, class_name):
         if confidence < item['confidence']:
             bounding_box = item['bounding_box']
             confidence = item['confidence']
+    
+    if bounding_box == []:
+        return ''
 
     word_height = bounding_box[3] - bounding_box[1]
 

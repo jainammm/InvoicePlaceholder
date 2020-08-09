@@ -10,4 +10,6 @@ COPY requirements.txt /code/
 RUN pip install -r requirements.txt
 COPY . /code/
 
-ENTRYPOINT [ "uvicorn", "app:app", "--port=8001" ]
+EXPOSE 8001
+
+ENTRYPOINT [ "uvicorn", "app:app", "--port=8001", "--host=0.0.0.0" ]

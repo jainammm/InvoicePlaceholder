@@ -85,7 +85,7 @@ async def root(request: Request):
     final_buyer_gstin_number = final_buyer_gstin_number.replace('GSTIN', '')
     final_buyer_gstin_number = final_buyer_gstin_number.replace('gstin', '')
     final_buyer_gstin_number = re.sub(r'[^\w]', '', final_buyer_gstin_number)
-    if final_buyer_gstin_number != ''
+    if final_buyer_gstin_number != '':
         if(en_dictionary.check(final_buyer_gstin_number)):
             final_buyer_gstin_number = ''
     print("BUYER_GSTIN_NUMBER:", final_buyer_gstin_number)
@@ -109,6 +109,10 @@ async def root(request: Request):
           final_total_invoice_amount)
     ws['M6'] = final_total_invoice_amount
 
+    final_description = getTotalAmount(model_output, 'DESCRIPTION')
+    print('DESCRIPTION', final_description)
+    ws['E14'] = final_description
+
     print("***************")
 
     table_class_names = ['PRODUCT_ID', 'HSN', 'TITLE', 'QUANTITY', 'UNIT_PRICE',
@@ -124,11 +128,18 @@ async def root(request: Request):
         column = 'B'
         for class_name in table_class_names:
             if class_name in row:
+                
                 if class_name == 'TOTAL_AMOUNT':
                     row[class_name] = re.sub('[^.a-zA-Z0-9 \n\.]', '', row[class_name])
-                    print("final total amount lol", row[class_name])
-                    if row[class_name].isnumeric():
+                    try:
                         row[class_name] = int(row[class_name])
+                    except:
+                        print("Not an integer!")
+                        
+                        try:
+                            row[class_name] = float(row[class_name])
+                        except:
+                            print("Not a floating point number!")
 
                     ws[column+str(row_number)] = row[class_name]
                     continue

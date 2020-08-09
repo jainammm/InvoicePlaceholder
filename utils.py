@@ -19,13 +19,14 @@ def getMaxConfidence(model_output, class_name):
 
     return final_id, final_output
 
+
 def getAddress(model_output, class_name):
     outputs = []
 
     for item in model_output:
         if item['class_name'] == class_name:
             outputs.append(item)
-        
+
     confidence = 0
     bounding_box = []
 
@@ -53,13 +54,14 @@ def getAddress(model_output, class_name):
 
     return final_address
 
+
 def getTotalAmount(model_output, class_name):
     outputs = []
 
     for item in model_output:
         if item['class_name'] == class_name:
             outputs.append(item)
-        
+
     confidence = 0
     bounding_box = []
 
@@ -67,7 +69,7 @@ def getTotalAmount(model_output, class_name):
         if confidence < item['confidence']:
             bounding_box = item['bounding_box']
             confidence = item['confidence']
-    
+
     if bounding_box == []:
         return ''
 
@@ -83,22 +85,36 @@ def getTotalAmount(model_output, class_name):
         ymin = bbox_item[1]
         ymax = bbox_item[3]
         if ymax < valid_box_ymax and ymin > valid_box_ymin:
-            final_amount += item['text'] +  ' ' 
+            final_amount += item['text'] + ' '
 
     return final_amount
+
 
 def getTable(model_output, class_names):
     base_class = 'HSN'
 
     bboxes_row = []
+    bounding_box_hsn = []
 
     for item in model_output:
         if item['class_name'] == base_class:
-            bbox = item['bounding_box']
-            word_height = bbox[3] - bbox[1]
-            bbox_row_ymin = bbox[1] - int(0.25 * word_height)
-            bbox_row_ymax = bbox[3] + int(0.25 * word_height)
-            bboxes_row.append([bbox_row_ymin, bbox_row_ymax])
+            bounding_box_hsn.append(item['bounding_box'])
+
+    for i, item in enumerate(bounding_box_hsn):
+        word_height = item[3] - item[1]
+
+        if i == 0:
+            bbox_row_ymin = item[1] - (1 * word_height)
+        else:
+            bbox_row_ymin = item[1] - int(0.25 * word_height)
+
+        if i == len(bounding_box_hsn) - 1:
+            bbox_row_ymax = item[3] + (2*word_height)
+        else:
+            bbox_row_ymax = max(
+                bounding_box_hsn[i+1][1] - (0.2 * word_height), item[3] + int(0.25 * word_height))
+
+        bboxes_row.append([bbox_row_ymin, bbox_row_ymax])
 
     print("boxes row")
     print(bboxes_row)
@@ -114,7 +130,7 @@ def getTable(model_output, class_names):
                 output = ''
                 for item in model_output:
                     if item['class_name'] == class_name:
-                        ymin, ymax =  item['bounding_box'][1], item['bounding_box'][3]
+                        ymin, ymax = item['bounding_box'][1], item['bounding_box'][3]
                         if ymin < bbox[1] and ymax > bbox[0]:
                             output += item['text'] + ' '
                             print(bbox)
@@ -127,7 +143,7 @@ def getTable(model_output, class_names):
                 output = []
                 for item in model_output:
                     if item['class_name'] == class_name:
-                        ymin, ymax =  item['bounding_box'][1], item['bounding_box'][3]
+                        ymin, ymax = item['bounding_box'][1], item['bounding_box'][3]
                         if ymin < bbox[1] and ymax > bbox[0]:
                             output.append(item)
 
